@@ -251,9 +251,9 @@ class multi_lock {
     }
 
     // Observers
-    std::tuple<Ms*...> mutex() const noexcept { return m_ms; }
-    bool               owns_lock() const noexcept { return m_locked; }
-    explicit           operator bool() const noexcept { return m_locked; }
+    mutex_type mutex() const noexcept { return m_ms; }
+    bool       owns_lock() const noexcept { return m_locked; }
+    explicit   operator bool() const noexcept { return m_locked; }
 
   private:
     mutex_type m_ms;
