@@ -1,0 +1,170 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+    color: #333;
+}
+
+h1 {
+    border-bottom: 3px solid #333;
+    padding-bottom: 10px;
+    margin-top: 40px;
+}
+
+h2 {
+    border-bottom: 2px solid #666;
+    padding-bottom: 8px;
+    margin-top: 35px;
+}
+
+h3 {
+    margin-top: 25px;
+    color: #444;
+}
+
+h4 {
+    margin-top: 20px;
+    color: #555;
+}
+
+code {
+    background-color: #f0f0f0;
+    color: #00008B;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.95em;
+}
+
+pre {
+    background-color: #f2f2f2;
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+    border-left: 4px solid #00008B;
+}
+
+pre code {
+    background-color: transparent;
+    padding: 0;
+    color: #00008B;
+}
+
+ul, ol {
+    margin-left: 20px;
+}
+
+li {
+    margin: 8px 0;
+}
+
+a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+blockquote {
+    border-left: 4px solid #ccc;
+    margin-left: 0;
+    padding-left: 20px;
+    color: #666;
+}
+
+dl.spec-clause {
+    display: grid;
+    grid-template-columns: 3em 15em 1fr;
+    gap: 1em;
+    margin: 0.5em 0;
+}
+
+dl.spec-clause dt {
+    font-weight: normal;
+    font-style: normal;
+    margin: 0;
+}
+
+dl.spec-clause dt.num {
+    grid-column: 1;
+}
+
+dl.spec-clause dt.clause {
+    grid-column: 2;
+}
+
+dl.spec-clause dd {
+    grid-column: 3;
+    margin: 0;
+}
+
+p.error-item {
+    display: grid;
+    grid-template-columns: 3em 15em 1fr;
+    gap: 1em;
+    margin: 0.25em 0;
+    padding-left: 0;
+}
+
+p.error-item .error-num {
+    grid-column: 1;
+}
+
+p.error-item .error-content {
+    grid-column: 3;
+}
+
+ins {
+    background-color: #e6ffe6;
+    text-decoration: none;
+}
+
+ins code {
+    background-color: #e6ffe6;
+}
+
+em {
+    font-style: italic;
+}
+
+strong {
+    font-weight: bold;
+}
+
+.header-info {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 30px;
+}
+
+.header-info ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.header-info li {
+    margin: 5px 0;
+}
