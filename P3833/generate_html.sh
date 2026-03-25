@@ -5,7 +5,7 @@ name=$(grep 'Document number' $in | grep -oP 'P\d+R\w+')
 out="$name".html
 
 # Generate HTML from Markdown (title from YAML front matter)
-pandoc "$in" -f markdown -t html5 -s \
+sed "s/@DATE@/$(date +%F)/g" "$in" | pandoc - -f markdown -t html5 -s \
   --css=proposal-style.css \
   --embed-resources --standalone \
   -o "$out"
