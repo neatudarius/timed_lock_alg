@@ -1,12 +1,17 @@
 #!/bin/bash
 
-in=P3833.md
-name=$(grep 'Document number' $in | grep -oP 'P\d+R\w+')
+if (( $# != 1 )); then
+    echo "USAGE: $0 proposal" >&2
+    exit 1
+fi
+
+in="$1"
+name=$(grep 'Document number' "$in" | grep -oP 'P\d+R\w+')
 out="$name".html
 
 # Generate HTML from Markdown (title from YAML front matter)
 sed "s/@DATE@/$(date +%F)/g" "$in" | pandoc - -f markdown -t html5 -s \
-  --css=proposal-style.css \
+  --css=css/proposal-style.css \
   --embed-resources --standalone \
   -o "$out"
 
@@ -20,4 +25,4 @@ perl -i -C -0pe 's|<p><strong>(\d+)</strong>[\s\x{00A0}]*<em>(Constraints\|Preco
 perl -i -0pe 's|<p>\((\d+\.\d+)\)\s+—\s+(.*?)</p>|<p class="error-item"><span class="error-num">(\1)</span><span class="error-content">— \2</span></p>|gs' \
   "$out"
 
-echo "Generated $out"
+echo "$out"
