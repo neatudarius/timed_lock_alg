@@ -8,7 +8,7 @@ To generate the html version of the document you're interested in:
 Example:
 ```
 $ ./generate_html.sh P3833.md
-P3833R2a.html
+P3833R3b.html
 ```
 `R3b` here means the second (`b`) pre-release of `R3`. When submitting the propsal, it'll first be named `R3` and committed. Directly after committing and submitting the proposal, a new version, `R4a` should be committed.
 
