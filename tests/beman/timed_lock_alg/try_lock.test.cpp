@@ -35,6 +35,47 @@ template <class MutexType, std::size_t N>
 void unlocker(std::array<MutexType, N>& mtxs) {
     std::apply([](auto&... mts) { return std::scoped_lock(std::adopt_lock, mts...); }, mtxs);
 }
+
+// Mutex whose try_lock_until/for spins on should_fail instead of timing out,
+// allowing deterministic scripting of lock sequences without sleeps.
+// wait_count increments each time a thread enters the spin, enabling the
+// background thread to synchronize on "algorithm is now blocked here".
+// held tracks whether the algorithm currently owns this mutex.
+struct ScriptedMutex {
+    std::atomic<bool> should_fail{false};
+    std::atomic<int>  wait_count{0};
+    std::atomic<bool> held{false};
+
+    void lock() {
+        if (should_fail) {
+            ++wait_count;
+            while (should_fail)
+                std::this_thread::yield();
+        }
+        held = true;
+    }
+    bool try_lock() {
+        if (should_fail)
+            return false;
+        held = true;
+        return true;
+    }
+    template <class R, class P>
+    bool try_lock_for(const std::chrono::duration<R, P>&) {
+        lock();
+        return true;
+    }
+    template <class C, class D>
+    bool try_lock_until(const std::chrono::time_point<C, D>&) {
+        lock();
+        return true;
+    }
+    void unlock() { held = false; }
+    void wait_for_waiter(int n = 1) {
+        while (wait_count < n)
+            std::this_thread::yield();
+    }
+};
 } // namespace
 
 // ============================================================================
@@ -149,21 +190,44 @@ TEST(TryLockIntegration, SucceedWithThreeInTrickySequence) {
     // The comments in this test are on implementation details.
     // A different implementation may behave differently but should
     // still succeed in locking all three in time.
-    std::array<std::timed_mutex, 3> mtxs;
-    auto                            th = JThread([&] {
-        std::lock(mtxs[0], mtxs[1], mtxs[2]);
-        std::this_thread::sleep_for(55ms);
-        mtxs[0].unlock(); // 5ms after try_lock_for started, 95ms left
-                          // try_lock_for gets this and jumps to mtxs[1]
-        std::this_thread::sleep_for(5ms);
-        mtxs[2].unlock(); // try_lock_for still hangs on mtxs[1]
-        mtxs[0].lock();
-        mtxs[1].unlock(); // try_lock_for gets this and jumps to mtxs[0]
-                          // 10ms after try_lock_for started, 90ms left
-        std::this_thread::sleep_for(10ms);
-        mtxs[0].unlock(); // try_lock_for should have 80ms left here
+    //
+    // Algorithm rotation with 3 mutexes [m0,m1,m2]:
+    //   idx=0 [0,1,2]: try_lock_until(m0), try_lock(m1,m2) → m1 fails → retry idx=1
+    //   idx=1 [1,2,0]: try_lock_until(m1), try_lock(m2,m0) → m2 fails → retry idx=2
+    //   idx=2 [2,0,1]: try_lock_until(m2), try_lock(m0,m1) → m0 fails → retry idx=0
+    //   idx=0 [0,1,2]: try_lock_until(m0), try_lock(m1,m2) → both succeed → done
+    ScriptedMutex m0, m1, m2;
+    m0.should_fail = m1.should_fail = m2.should_fail = true;
+
+    auto th = JThread([&] {
+        // idx=0: algorithm blocks on m0
+        m0.wait_for_waiter(1);
+        EXPECT_FALSE(m1.held);
+        EXPECT_FALSE(m2.held);
+        m0.should_fail = false; // unblock m0; try_lock(m1) fails → releases m0, retry idx=1
+
+        // idx=1: algorithm blocks on m1
+        m1.wait_for_waiter(1);
+        EXPECT_FALSE(m0.held);
+        EXPECT_FALSE(m2.held);
+        m0.should_fail = true;  // re-block m0 before algorithm reaches it
+        m1.should_fail = false; // unblock m1; try_lock(m2) fails → releases m1, retry idx=2
+
+        // idx=2: algorithm blocks on m2
+        m2.wait_for_waiter(1);
+        EXPECT_FALSE(m0.held);
+        EXPECT_FALSE(m1.held);
+        m1.should_fail = true;  // re-block m1 before algorithm reaches it
+        m2.should_fail = false; // unblock m2; try_lock(m0) fails → releases m2, retry idx=0
+
+        // idx=0 again: algorithm blocks on m0
+        m0.wait_for_waiter(2);
+        EXPECT_FALSE(m1.held);
+        EXPECT_FALSE(m2.held);
+        m1.should_fail = false; // all free for final round
+        m2.should_fail = false;
+        m0.should_fail = false; // unblock m0; try_lock(m1,m2) → both succeed → done
     });
 
-    std::this_thread::sleep_for(50ms);
-    EXPECT_EQ(-1, std::apply([](auto&... mts) { return tla::try_lock_for(100ms + extra_grace, mts...); }, mtxs));
+    EXPECT_EQ(-1, tla::try_lock_for(no_duration, m0, m1, m2));
 }
