@@ -1,7 +1,7 @@
 # beman.timed_lock_alg : Timed lock algorithms for multiple lockables
 
 <!--
-SPDX-License-Identifier: MIT
+SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 -->
 
 <!-- markdownlint-disable-next-line line-length -->
@@ -15,7 +15,7 @@ SPDX-License-Identifier: MIT
 
 ## License
 
-`beman.timed_lock_alg` is licensed under the MIT License.
+`beman.timed_lock_alg` is licensed under the Apache License v2.0 with LLVM Exceptions.
 
 ## Usage
 

@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 add_library(beman.timed_lock_alg)
 add_library(beman::timed_lock_alg ALIAS beman.timed_lock_alg)
