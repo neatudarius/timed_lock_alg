@@ -312,7 +312,7 @@ This will generate the following directory structure:
 │   └── beman
 │       └── timed_lock_alg
 │           ├── timed_lock_alg.hpp
-│           └── ...
+│           └── mutex.hpp
 └── lib
     ├── cmake
     │   └── beman.timed_lock_alg
