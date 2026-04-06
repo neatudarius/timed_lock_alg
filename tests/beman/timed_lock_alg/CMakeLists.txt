@@ -6,7 +6,7 @@ add_executable(beman.timed_lock_alg.tests.try_lock)
 target_sources(beman.timed_lock_alg.tests.try_lock PRIVATE try_lock.test.cpp)
 target_link_libraries(
     beman.timed_lock_alg.tests.try_lock
-    PRIVATE beman::timed_lock_alg GTest::gtest GTest::gtest_main
+    PRIVATE beman::timed_lock_alg GTest::gtest_main
 )
 
 include(GoogleTest)
@@ -19,7 +19,7 @@ target_sources(
 )
 target_link_libraries(
     beman.timed_lock_alg.tests.multi_lock
-    PRIVATE beman::timed_lock_alg GTest::gtest GTest::gtest_main
+    PRIVATE beman::timed_lock_alg GTest::gtest_main
 )
 
 include(GoogleTest)
