@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 find_package(GTest REQUIRED)
 

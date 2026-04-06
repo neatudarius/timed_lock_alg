@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #ifndef BEMAN_TIMED_LOCK_ALG_TESTS_MOCK_TIMED_MUTEX_HPP
 #define BEMAN_TIMED_LOCK_ALG_TESTS_MOCK_TIMED_MUTEX_HPP
