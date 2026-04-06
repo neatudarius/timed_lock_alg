@@ -1,11 +1,11 @@
-# beman.timed_lock_alg : Timed lock algorithms for multiple lockables
+# beman.timed_lock_alg: Timed lock algorithms for multiple lockables
 
 <!--
 SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 -->
 
 <!-- markdownlint-disable-next-line line-length -->
-![Library Status](https://github.com/bemanproject/beman/blob/main/images/badges/beman_badge-beman_library_under_development.svg) ![Continuous Integration Tests](https://github.com/bemanproject/timed_lock_alg/actions/workflows/ci_tests.yml/badge.svg) ![Lint Check (pre-commit)](https://github.com/bemanproject/timed_lock_alg/actions/workflows/pre-commit-check.yml/badge.svg) [![Coverage](https://coveralls.io/repos/github/bemanproject/timed_lock_alg/badge.svg?branch=main)](https://coveralls.io/github/bemanproject/timed_lock_alg?branch=main) ![Standard Target](https://github.com/bemanproject/beman/blob/main/images/badges/cpp29.svg) [![Compiler Explorer Example](https://img.shields.io/badge/Try%20it%20on%20Compiler%20Explorer-grey?logo=compilerexplorer&logoColor=67c52a)](https://godbolt.org/z/jPYdxT3E7)
+![Library Status](https://raw.githubusercontent.com/bemanproject/beman/refs/heads/main/images/badges/beman_badge-beman_library_under_development.svg) ![Continuous Integration Tests](https://github.com/bemanproject/timed_lock_alg/actions/workflows/ci_tests.yml/badge.svg) ![Lint Check (pre-commit)](https://github.com/bemanproject/timed_lock_alg/actions/workflows/pre-commit-check.yml/badge.svg) [![Coverage](https://coveralls.io/repos/github/bemanproject/timed_lock_alg/badge.svg?branch=main)](https://coveralls.io/github/bemanproject/timed_lock_alg?branch=main) ![Standard Target](https://github.com/bemanproject/beman/blob/main/images/badges/cpp29.svg) [![Compiler Explorer Example](https://img.shields.io/badge/Try%20it%20on%20Compiler%20Explorer-grey?logo=compilerexplorer&logoColor=67c52a)](https://godbolt.org/z/jPYdxT3E7)
 
 `beman.timed_lock_alg` implements timed lock algorithms for multiple lockables and `std::multi_lock`.
 
@@ -22,7 +22,8 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 `std::try_lock_until` and `std::try_lock_for` are a function templates usable with zero to many _TimedLockables_.
 
 Example:
-```
+
+```cpp
 std::timed_mutex m1, m2;
 if (std::try_lock_for(100ms, m1, m2) == -1) {
     // success
@@ -36,7 +37,8 @@ if (std::try_lock_for(100ms, m1, m2) == -1) {
 `std::multi_lock` is a flexible RAII container usable with zero to many _BasicLockables_.
 
 Example:
-```
+
+```cpp
 std::timed_mutex m1, m2;
 std::multi_lock lock(100ms, m1, m2);
 if (lock) {
@@ -53,12 +55,11 @@ Full runnable examples can be found in [`examples/`](examples/).
 This project requires at least the following to build:
 
 * A C++ compiler that conforms to the C++20 standard or greater
-* CMake 3.28 or later
+* CMake 3.30 or later
 * (Test Only) GoogleTest
 
-You can disable building tests by setting CMake option
-[`BEMAN_TIMED_LOCK_ALG_BUILD_TESTS`](#beman_timed_lock_alg_build_tests) to `OFF`
-when configuring the project.
+You can disable building tests by setting CMake option `BEMAN_TIMED_LOCK_ALG_BUILD_TESTS` to
+`OFF` when configuring the project.
 
 ### Supported Platforms
 
@@ -79,6 +80,8 @@ This project also supports ICX (with libstdc++ or libc++) versions 2021.1.2-2025
 * Note: libstdc++ versions 14-14.3 and 15-15.2 (inclusive) does _not_ support using `-fsanitize=thread` on code using `std::timed_mutex` due to [Bug 121496](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=121496). This affects GCC and all implementations using libstdc++ such as LLVM Clang++ and ICX unless `-stdlib=libc++` is used.
 
 ## Development
+
+See the [Contributing Guidelines](CONTRIBUTING.md).
 
 ### Develop using GitHub Codespace
 
@@ -257,7 +260,6 @@ cmake -B build -S . -DCMAKE_CXX_STANDARD=20 -DBEMAN_TIMED_LOCK_ALG_BUILD_TESTS=O
 
 Enable building examples. Default: ON. Values: { ON, OFF }.
 
-
 #### `BEMAN_TIMED_LOCK_ALG_INSTALL_CONFIG_FILE_PACKAGE`
 
 Enable installing the CMake config file package. Default: ON.
@@ -269,6 +271,78 @@ This is required so that users of `beman.timed_lock_alg` can use
 </details>
 
 ## Integrate beman.timed_lock_alg into your project
+
+### Build
+
+You can build timed_lock_alg using a CMake workflow preset:
+
+```bash
+cmake --workflow --preset gcc-release
+```
+
+To list available workflow presets, you can invoke:
+
+```bash
+cmake --list-presets=workflow
+```
+
+For details on building beman.timed_lock_alg without using a CMake preset, refer to the
+[Contributing Guidelines](CONTRIBUTING.md).
+
+### Installation
+
+To install beman.timed_lock_alg globally after building with the `gcc-release` preset, you can
+run:
+
+```bash
+sudo cmake --install build/gcc-release
+```
+
+Alternatively, to install to a prefix, for example `/opt/beman`, you can run:
+
+```bash
+sudo cmake --install build/gcc-release --prefix /opt/beman
+```
+
+This will generate the following directory structure:
+
+```txt
+/opt/beman
+├── include
+│   └── beman
+│       └── timed_lock_alg
+│           ├── timed_lock_alg.hpp
+│           └── ...
+└── lib
+    ├── cmake
+    │   └── beman.timed_lock_alg
+    │       ├── beman.timed_lock_alg-config-version.cmake
+    │       ├── beman.timed_lock_alg-config.cmake
+    │       ├── beman.timed_lock_alg-targets-debug.cmake
+    │       └── beman.timed_lock_alg-targets.cmake
+    └── libbeman.timed_lock_alg.a
+```
+
+### CMake Configuration
+
+If you installed beman.timed_lock_alg to a prefix, you can specify that prefix to your CMake
+project using `CMAKE_PREFIX_PATH`; for example, `-DCMAKE_PREFIX_PATH=/opt/beman`.
+
+You need to bring in the `beman.timed_lock_alg` package to define the `beman::timed_lock_alg` CMake
+target:
+
+```cmake
+find_package(beman.timed_lock_alg REQUIRED)
+```
+
+You will then need to add `beman::timed_lock_alg` to the link libraries of any libraries or
+executables that include `beman.timed_lock_alg` headers.
+
+```cmake
+target_link_libraries(yourlib PUBLIC beman::timed_lock_alg)
+```
+
+### Using beman.timed_lock_alg
 
 To use `beman.timed_lock_alg` in your C++ project,
 include an appropriate `beman.timed_lock_alg` header from your source code.
@@ -282,23 +356,3 @@ include an appropriate `beman.timed_lock_alg` header from your source code.
 > `beman.timed_lock_alg` headers are to be included with the `beman/timed_lock_alg/` prefix.
 > Altering include search paths to spell the include target another way (e.g.
 > `#include <mutex.hpp>`) is unsupported.
-
-The process for incorporating `beman.timed_lock_alg` into your project depends on the
-build system being used. Instructions for CMake are provided in following sections.
-
-### Incorporating `beman.timed_lock_alg` into your project with CMake
-
-For CMake based projects,
-you will need to use the `beman.timed_lock_alg` CMake module
-to define the `beman::timed_lock_alg` CMake target:
-
-```cmake
-find_package(beman.timed_lock_alg REQUIRED)
-```
-
-You will also need to add `beman::timed_lock_alg` to the link libraries of
-any libraries or executables that include `beman.timed_lock_alg` headers.
-
-```cmake
-target_link_libraries(yourlib PUBLIC beman::timed_lock_alg)
-```
