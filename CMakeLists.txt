@@ -27,7 +27,7 @@ option(
 # for find of beman-install-library
 include(infra/cmake/beman-install-library.cmake)
 
-add_library(beman.timed_lock_alg)
+add_library(beman.timed_lock_alg INTERFACE)
 add_library(beman::timed_lock_alg ALIAS beman.timed_lock_alg)
 
 target_sources(
@@ -41,7 +41,6 @@ set_target_properties(
 )
 
 add_subdirectory(include/beman/timed_lock_alg)
-add_subdirectory(src/beman/timed_lock_alg)
 
 beman_install_library(beman.timed_lock_alg TARGETS beman.timed_lock_alg)
 

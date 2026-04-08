@@ -309,18 +309,18 @@ This will generate the following directory structure:
 ```txt
 /opt/beman
 ├── include
-│   └── beman
-│       └── timed_lock_alg
-│           ├── timed_lock_alg.hpp
-│           └── mutex.hpp
-└── lib
-    ├── cmake
-    │   └── beman.timed_lock_alg
-    │       ├── beman.timed_lock_alg-config-version.cmake
-    │       ├── beman.timed_lock_alg-config.cmake
-    │       ├── beman.timed_lock_alg-targets-debug.cmake
-    │       └── beman.timed_lock_alg-targets.cmake
-    └── libbeman.timed_lock_alg.a
+│   └── beman
+│       └── timed_lock_alg
+│           ├── mutex.hpp
+│           └── timed_lock_alg.hpp
+└── lib64
+    └── cmake
+        └── beman.timed_lock_alg
+            ├── beman.timed_lock_alg-config.cmake
+            ├── beman.timed_lock_alg-config-version.cmake
+            ├── beman.timed_lock_alg-targets.cmake
+            └── cxx-modules
+                └── cxx-modules-beman.timed_lock_alg-targets.cmake
 ```
 
 ### CMake Configuration
