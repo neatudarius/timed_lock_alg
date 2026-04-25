@@ -9,7 +9,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 `beman.timed_lock_alg` implements timed lock algorithms for multiple lockables and `std::multi_lock`.
 
-**Implements**: `std::try_lock_until` and `std::try_lock_for` proposed in [Timed lock algorithms for multiple lockables (P3832)](https://wg21.link/p3832r1) and `std::multi_lock` proposed in [`std::multi_lock` (P3833)](https://wg21.link/p3833r2).
+**Implements**: `std::try_lock_until` and `std::try_lock_for` proposed in [Timed lock algorithms for multiple lockables (P3832)](https://wg21.link/P3832R1) and `std::multi_lock` proposed in [`std::multi_lock` (P3833)](https://wg21.link/P3833R2).
 
 **Status**: [Under development and not yet ready for production use.](https://github.com/bemanproject/beman/blob/main/docs/beman_library_maturity_model.md#under-development-and-not-yet-ready-for-production-use)
 
